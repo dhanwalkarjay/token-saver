@@ -99,7 +99,7 @@ class ChatCompletionRequest(BaseModel):
 
 # ── Main endpoint ─────────────────────────────────────────────────────────
 
-@router.post("/v1/chat/completions")
+@router.post("/v1/chat/completions", response_model=None)
 async def chat_completions(
     request_body: ChatCompletionRequest,
     raw_request: Request,

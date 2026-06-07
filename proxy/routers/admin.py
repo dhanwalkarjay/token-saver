@@ -70,7 +70,7 @@ async def require_admin(
 
 # ── Health check (public) ─────────────────────────────────────────────────
 
-@router.get("/health")
+@router.get("/health", response_model=None)
 async def health_check(raw_request: Request) -> JSONResponse:
     """
     Public health check endpoint.
@@ -114,7 +114,7 @@ async def health_check(raw_request: Request) -> JSONResponse:
 
 # ── Global stats ──────────────────────────────────────────────────────────
 
-@router.get("/v1/stats")
+@router.get("/v1/stats", response_model=None)
 async def global_stats(
     days: int = 30,
     db: AsyncSession = Depends(get_db),
@@ -145,7 +145,7 @@ async def global_stats(
 
 # ── Per-team stats ────────────────────────────────────────────────────────
 
-@router.get("/v1/stats/teams/{team_id}")
+@router.get("/v1/stats/teams/{team_id}", response_model=None)
 async def team_stats(
     team_id: str,
     days: int = 30,
@@ -172,7 +172,7 @@ async def team_stats(
 
 # ── Team management ───────────────────────────────────────────────────────
 
-@router.post("/v1/teams", status_code=201)
+@router.post("/v1/teams", status_code=201, response_model=None)
 async def create_team(
     body: CreateTeamRequest,
     db: AsyncSession = Depends(get_db),
@@ -226,7 +226,7 @@ async def create_team(
     )
 
 
-@router.get("/v1/teams")
+@router.get("/v1/teams", response_model=None)
 async def list_teams(
     db: AsyncSession = Depends(get_db),
     _admin: TeamConfig = Depends(require_admin),
@@ -254,7 +254,7 @@ async def list_teams(
     )
 
 
-@router.delete("/v1/teams/{team_id}")
+@router.delete("/v1/teams/{team_id}", response_model=None)
 async def deactivate_team(
     team_id: str,
     db: AsyncSession = Depends(get_db),
@@ -273,7 +273,7 @@ async def deactivate_team(
 
 # ── Cache management ──────────────────────────────────────────────────────
 
-@router.delete("/v1/cache")
+@router.delete("/v1/cache", response_model=None)
 async def flush_cache(
     raw_request: Request,
     _admin: TeamConfig = Depends(require_admin),
@@ -295,7 +295,7 @@ async def flush_cache(
 
 # ── Model catalog ─────────────────────────────────────────────────────────
 
-@router.get("/v1/models")
+@router.get("/v1/models", response_model=None)
 async def get_models() -> JSONResponse:
     """List all supported models with their pricing and tier information."""
     models = list_all_models()
