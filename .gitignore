@@ -1,0 +1,74 @@
+# Git ignore file for TokenSaver Enterprise
+
+# ─────────────────────────────────────────────
+# Secrets & Environment
+# ─────────────────────────────────────────────
+.env
+.env.local
+.env.production
+*.pem
+*.key
+*.cert
+
+# ─────────────────────────────────────────────
+# Python
+# ─────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+dist/
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+pip-log.txt
+pip-delete-this-directory.txt
+.pytest_cache/
+.coverage
+htmlcov/
+*.log
+
+# ─────────────────────────────────────────────
+# Node / Next.js
+# ─────────────────────────────────────────────
+node_modules/
+.next/
+out/
+dashboard/node_modules/
+dashboard/.next/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# ─────────────────────────────────────────────
+# ML Models (large files, download automatically)
+# ─────────────────────────────────────────────
+models/
+*.onnx
+*.bin
+*.safetensors
+
+# ─────────────────────────────────────────────
+# IDE
+# ─────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# ─────────────────────────────────────────────
+# Docker
+# ─────────────────────────────────────────────
+.dockerignore
+
+# ─────────────────────────────────────────────
+# Terraform / Infrastructure
+# ─────────────────────────────────────────────
+*.tfstate
+*.tfstate.backup
+.terraform/

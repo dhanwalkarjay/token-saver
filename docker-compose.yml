@@ -1,0 +1,62 @@
+version: "3.9"
+
+services:
+  # ── Redis Stack (includes RedisSearch for vector similarity) ─────────────
+  redis:
+    image: redis/redis-stack:latest
+    ports:
+      - "6379:6379"
+      - "8001:8001"   # Redis Insight UI
+    volumes:
+      - redis_data:/data
+    environment:
+      REDIS_ARGS: "--save 60 1 --loglevel warning"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── PostgreSQL ────────────────────────────────────────────────────────────
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: tokensaver
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: tokensaver
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tokensaver"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # ── TokenSaver Proxy ──────────────────────────────────────────────────────
+  tokensaver:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      REDIS_URL: redis://redis:6379
+      DATABASE_URL: postgresql+asyncpg://tokensaver:password@postgres:5432/tokensaver
+    depends_on:
+      redis:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    volumes:
+      - ./proxy:/app/proxy:ro   # Mount source for hot-reload in dev
+
+volumes:
+  redis_data:
+  postgres_data:
